@@ -5,43 +5,23 @@
 // })
 
 var gulp = require('gulp'),
-		fs = require('fs'),
-		reactTools = require('react-tools'),
-		spawn = require('child_process').spawn
-
-var transform = function (srcFile, destFile, cb) {
-	console.log('Reading %s...', srcFile)
-
-	var src = fs.readFile(srcFile, {encoding: 'utf8'}, function(readErr, data) {
-		if (readErr) {
-			cb(readErr)
-		}             
-		else {
-			console.log('Writing %s', destFile)	
-			fs.writeFile(destFile, reactTools.transform(data), function (writeErr) {
-				if (writeErr) {
-					cb(writeErr)
-				}
-				else {
-					cb()
-				}
-			})
-		}
-	})
-}
+		gulpReact = require('gulp-react'),
+	  gulpNodemon = require('gulp-nodemon')
 
 gulp.task('jsx', function (cb) {
-	fs.mkdir('./lib', function (err) {
-		transform('app.jsx', './lib/app.js', function (err) {
-			cb(err)
-		})
-	})
+	return gulp.src('*.jsx')
+						 .pipe(gulpReact())
+						 .pipe(gulp.dest('lib'))
 })
 
 gulp.task('node', ['jsx'], function () {
-	spawn('node', ['./lib/app.js'], { stdio: 'inherit'})
+	gulpNodemon({
+		script: 'lib/app.js',
+		ext: 'js'
+	})
 })
 
 gulp.task('default', function () {
 	gulp.start('node')
 })
+
