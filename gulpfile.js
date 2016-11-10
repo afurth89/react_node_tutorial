@@ -6,18 +6,27 @@
 
 var gulp = require('gulp'),
 		gulpReact = require('gulp-react'),
-	  gulpNodemon = require('gulp-nodemon')
+	  gulpNodemon = require('gulp-nodemon'),
+		gulpWatch = require('gulp-watch')
+
+// Gulp will watch our index.jsx file and call our jsx task whenever the file is touched
+gulp.task('watch-jsx', ['jsx'], function () {
+	gulpWatch('**/*.jsx', { ignored: 'lib/' }, function () {
+		gulp.start('jsx')
+	})	
+})
 
 gulp.task('jsx', function (cb) {
-	return gulp.src('*.jsx')
+	return gulp.src('**/*.jsx')
 						 .pipe(gulpReact())
 						 .pipe(gulp.dest('lib'))
 })
 
-gulp.task('node', ['jsx'], function () {
+gulp.task('node', ['watch-jsx'], function () {
 	gulpNodemon({
 		script: 'lib/app.js',
-		ext: 'js'
+		ignore: ['gulpfile.js'],
+		ext: 'js jsx'
 	})
 })
 

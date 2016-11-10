@@ -15,7 +15,10 @@ http.createServer(function (req, res) {
 	          <title>Hello World</title>
           </head>
           <body>
-            app.jsx compiled into app.js by hand
+          app.jsx, automatically processed
+          through gulp and gulp-react, with
+          node automatically restarted
+          through gulp-nodemon!
           </body>
         </html>
       )
